@@ -1,0 +1,99 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fight Game</title>
+    <link rel="stylesheet" href="fightGame.css" />
+    <script src="fightGame.js" defer></script>
+    <script src="https://unpkg.com/vue@3"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <style>
+/*  */
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Welcome to our Game</h1>
+    </header>
+<!--  -->
+    <div id="game">
+      <div class="allPlayer">
+        <section id="computer" class="container">
+          <h2>Computer Leben</h2>
+          <div class="leben">
+            <div class="leben_wert" :style="computerBar"></div>
+          </div>
+        </section>
+        <section id="player" class="container">
+          <h2>Spieler Leben</h2>
+          <div class="leben">
+            <div class="leben_wert" :style="spielerBar"></div>
+          </div>
+        </section>
+      </div>
+      <!-- section für neues Game -->
+      <section class="container" v-if="gewinner">
+        <h1>Ende des Spiels</h1>
+        <h2 v-if="gewinner == 'spieler'">Spieler hat gewonnen</h2>
+        <h2 v-else-if="gewinner =='computer'">Computer hat gewonnen</h2>
+        <h2 v-else-if="gewinner =='draw'">Untentschieden</h2>
+        <button @click="neuesSpiel()">Neues Spiel</button>
+      </section>
+      <!-- section new Game End -->
+      <section id="controls">
+        <button @click="spielerGreiftComputerAn">ANGRIFF</button>
+        <button :disabled="aktiviereSpecialAttack" @click="specialAttack">
+          SPECIAL ATTACK
+        </button>
+        <button @click="heileSpieler">HEILUNG</button>
+        <button @click="aufgeben">AUFGEBEN</button>
+      </section>
+
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="flexSwitchCheckChecked"
+          checked
+          v-model="checked"
+        />
+        <label class="form-check-label" for="flexSwitchCheckChecked"
+          >Batte Log</label
+        >
+      </div>
+
+      <section id="logs" class="container" v-if="checked">
+        <h2>Batte Log</h2>
+        <ul>
+          <li v-for="message in logMessages">
+            <span
+              :class="{
+              'playerLog' : message.aktionVon === 'Spieler', 
+              'computerLog' : message.aktionVon === 'Computer'
+            }"
+            >
+              {{message.aktionVon === "Spieler" ? 'Spieler' : 'Computer'}}
+            </span>
+
+            <span v-if="message.aktionArt === 'Heilung' ">
+              heilt sich selbst für
+              <span class="healLog"> {{message.aktionWert}} </span>
+            </span>
+            <span v-else>
+              greift an mit
+              <span class="damageLog"> {{message.aktionWert}} </span>
+            </span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </body>
+</html>
